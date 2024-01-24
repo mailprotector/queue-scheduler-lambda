@@ -20,7 +20,7 @@ def lambda_handler(event, context):
 
     url = os.environ.get('URL')
     headers = {"Authorization": "Bearer " + token, "Content-Type": "application/json"}
-    data = json.dump({"job_class_name": event})
+    data = json.dumps({"job_class_name": event})
     resp = requests.post(url, data=data, headers=headers)
     print (resp.status_code, resp.reason)
 

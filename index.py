@@ -11,7 +11,7 @@ from aws_lambda_powertools.utilities import parameters
 from prometheus_client import CollectorRegistry, Gauge, Counter, push_to_gateway
 
 session = boto3.session.Session()
-pushgateway_host = os.environ.get('PUSHGATEWAY_HOST', 'localhost:9091')
+pushgateway_host = os.environ.get('PUSHGATEWAY_HOST')
 application = os.environ.get('APPLICATION', 'shield')
 environment = os.environ.get('ENVIRONMENT', 'staging')
 region = os.environ.get('REGION', 'us-east-1')
@@ -33,10 +33,12 @@ def lambda_handler(event, context):
     end_time = time.time()
 
     # metrics
-    full_env = f'{application}-{environment}-{region}'
-    registry = CollectorRegistry()
-    metric_request_total = Counter('queue_scheduled_lambda_requests_total', 'Total requests of the lambda', ['environment', 'event', 'status'], registry=registry)
-    metric_request_total.labels(environment=full_env, event=str(event), status=resp.status_code).inc()
-    metric_runtime = Gauge('queue_scheduled_lambda_runtime_milliseconds', 'Total runtime of the lambda in milliseconds', ['environment', 'event'], registry=registry)
-    metric_runtime.labels(environment=full_env, event=str(event)).set(round((end_time - start_time)*1000))
-    push_to_gateway(pushgateway_host, job='lambda', registry=registry)
+    if (pushgateway_host is not None and pushgateway_host != ''):
+        full_env = f'{application}-{environment}-{region}'
+        registry = CollectorRegistry()
+        metric_request_total = Counter('queue_scheduled_lambda_requests_total', 'Total requests of the lambda', ['environment', 'event', 'status'], registry=registry)
+        metric_request_total.labels(environment=full_env, event=str(event), status=resp.status_code).inc()
+        metric_runtime = Gauge('queue_scheduled_lambda_runtime_milliseconds', 'Total runtime of the lambda in milliseconds', ['environment', 'event'], registry=registry)
+        metric_runtime.labels(environment=full_env, event=str(event)).set(round((end_time - start_time)*1000))
+        push_to_gateway(pushgateway_host, job='lambda', registry=registry)
+    

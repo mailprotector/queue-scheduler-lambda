@@ -1,1 +1,2 @@
-resque-scheduler/*
+queue-scheduler/*
+.DS_Store

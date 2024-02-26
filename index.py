@@ -8,7 +8,7 @@ import requests
 import time
 from botocore.exceptions import ClientError
 from aws_lambda_powertools.utilities import parameters
-from prometheus_client import CollectorRegistry, Gauge, Counter, push_to_gateway
+from prometheus_client import CollectorRegistry, Gauge, Counter, pushadd_to_gateway
 
 session = boto3.session.Session()
 pushgateway_host = os.environ.get('PUSHGATEWAY_HOST')
@@ -40,5 +40,5 @@ def lambda_handler(event, context):
         metric_request_total.labels(environment=full_env, event=str(event), status=resp.status_code).inc()
         metric_runtime = Gauge('queue_scheduled_lambda_runtime_milliseconds', 'Total runtime of the lambda in milliseconds', ['environment', 'event'], registry=registry)
         metric_runtime.labels(environment=full_env, event=str(event)).set(round((end_time - start_time)*1000))
-        push_to_gateway(pushgateway_host, job='lambda', registry=registry)
+        pushadd_to_gateway(pushgateway_host, grouping_key={'event': str(event)}, job='lambda', registry=registry)
     

@@ -33,7 +33,7 @@ def lambda_handler(event, context):
     end_time = time.time()
 
     # metrics
-    if (pushgateway_host is not None and pushgateway_host != ''):
+    if (pushgateway_host is not None or pushgateway_host != ''):
         full_env = f'{application}-{environment}-{region}'
         registry = CollectorRegistry()
         metric_request_total = Counter('queue_scheduled_lambda_requests_total', 'Total requests of the lambda', ['environment', 'event', 'status'], registry=registry)

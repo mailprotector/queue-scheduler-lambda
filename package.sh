@@ -4,7 +4,7 @@ set -x
 
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly VENV="queue-scheduler/.venv"
-readonly PYTHON="python3.9"
+readonly PYTHON="python3.13"
 readonly ZIP_FILE="package.zip"
 readonly SITE_PACKAGES=${VENV}/lib/${PYTHON}/site-packages
 

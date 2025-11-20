@@ -12,11 +12,10 @@ jobs:
     steps:
       - name: Install pre-requisites
         run: |
-          yum install make tar zip git -y
-          python3 -m ensurepip --upgrade
+          dnf install make tar zip git -y
 
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v5
 
       - name: Create lambda package
         run: |
@@ -24,7 +23,7 @@ jobs:
 
       - name: Create release
         id: create-release
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:

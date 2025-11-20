@@ -13,6 +13,7 @@ cd "${SCRIPT_DIR}"
 ${PYTHON} -m venv "${VENV}"
 source "${VENV}/bin/activate"
 
+${PYTHON} -m pip install --upgrade pip
 pip3 install -r requirements.txt
 
 pushd ${SITE_PACKAGES}

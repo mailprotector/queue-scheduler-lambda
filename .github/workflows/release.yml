@@ -12,7 +12,9 @@ jobs:
     steps:
       - name: Install pre-requisites
         run: |
+          dnf update -y
           dnf install make tar zip git -y
+          dnf install python3.13 -y
 
       - name: Checkout code
         uses: actions/checkout@v5
